@@ -3,165 +3,175 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DSTiers | Pro Database</title>
+    <title>DSTiers | Elite Database</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700;900&display=swap" rel="stylesheet">
     <style>
         :root { --accent: #eab308; --bg: #030303; }
-        body { background-color: var(--bg); color: #eee; font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; }
-        
-        /* Interactive Filter Buttons */
-        .filter-btn { transition: 0.15s; color: #888; font-weight: 700; font-size: 11px; padding: 4px 12px; border-radius: 6px; }
-        .filter-btn:hover { background: rgba(255,255,255,0.05); color: white; }
-        .filter-btn.active { background: #1a1a1a; color: white; font-weight: 900; }
-        
-        /* Pro Table Styling */
-        table { border-collapse: separate; border-spacing: 0; }
-        thead tr th { background: #0c0c0c; border-bottom: 2px solid #1a1a1a; padding: 12px 16px; font-weight: 900; color: #666; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
-        tbody tr td { padding: 12px 16px; border-bottom: 1px solid #121212; transition: 0.1s; }
-        tbody tr:hover td { background: rgba(255,255,255,0.015); border-bottom-color: #222; }
-        
-        /* The Advanced Tier Badges (Dynamic colors) */
-        .t-badge { font-size: 10px; font-weight: 900; padding: 2px 6px; border-radius: 4px; box-shadow: inset 0 0 1px 1px rgba(255,255,255,0.05); }
-        
-        /* Platform/Mode Badges */
-        .p-badge { background: #141414; color: #aaa; font-size: 10px; font-weight: bold; padding: 2px 8px; border-radius: 4px; }
-        .m-badge { background: rgba(0,0,0,0.5); color: #888; border: 1px solid #1a1a1a; font-size: 10px; font-weight: bold; padding: 2px 8px; border-radius: 4px; text-transform: uppercase; }
+        body { background-color: var(--bg); color: #eee; font-family: 'Inter', sans-serif; overflow-x: hidden; }
 
+        /* --- COOL ANIMATIONS --- */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes glowPulse {
+            0% { box-shadow: 0 0 5px rgba(234, 179, 8, 0.2); }
+            50% { box-shadow: 0 0 20px rgba(234, 179, 8, 0.5); }
+            100% { box-shadow: 0 0 5px rgba(234, 179, 8, 0.2); }
+        }
+
+        .anim-fade-up { animation: fadeInUp 0.6s ease-out forwards; }
+        .anim-slide-left { animation: slideInLeft 0.5s ease-out forwards; }
+        
+        /* Staggered Row Animation */
+        .pro-row { opacity: 0; animation: fadeInUp 0.5s ease-out forwards; }
+        .pro-row:nth-child(1) { animation-delay: 0.1s; }
+        .pro-row:nth-child(2) { animation-delay: 0.2s; }
+
+        /* --- UI STYLING --- */
+        .filter-btn { transition: 0.2s; color: #666; font-size: 11px; padding: 6px 14px; border-radius: 8px; cursor: pointer; border: 1px solid transparent; }
+        .filter-btn:hover { color: white; background: #111; }
+        .filter-btn.active { background: #1a1a1a; color: #eab308; border-color: #eab308; font-weight: 900; }
+
+        table { border-spacing: 0 8px; border-collapse: separate; }
+        tbody tr td { background: #0a0a0a; border-top: 1px solid #1a1a1a; border-bottom: 1px solid #1a1a1a; transition: 0.3s; }
+        tbody tr td:first-child { border-left: 1px solid #1a1a1a; border-radius: 12px 0 0 12px; }
+        tbody tr td:last-child { border-right: 1px solid #1a1a1a; border-radius: 0 12px 12px 0; }
+        tbody tr:hover td { background: #111; border-color: #333; transform: scale(1.005); }
+
+        .t-badge { font-size: 10px; font-weight: 900; padding: 2px 8px; border-radius: 5px; text-transform: uppercase; }
+        .L1-glow { animation: glowPulse 2s infinite; border: 1px solid #3b82f6; }
+
+        /* Tier Colors */
+        .bg-L1 { background: #1e40af; color: white; }
+        .bg-H1 { background: #3b82f6; color: white; }
+        .bg-H2 { background: #9333ea; color: white; }
+        .bg-L2 { background: #6b21a8; color: white; }
+        .bg-H4 { background: #f97316; color: white; }
+        .bg-L5 { background: #ca8a04; color: white; }
+        .bg-H5 { background: #eab308; color: black; }
     </style>
 </head>
-<body class="min-h-screen">
+<body class="p-4 md:p-10">
 
-    <nav class="border-b border-zinc-900 bg-black/95 sticky top-0 z-50 px-8 py-3 flex justify-between items-center backdrop-blur-sm">
-        <div class="flex items-center gap-1">
-            <h1 class="text-xl font-black italic tracking-tighter text-yellow-500">DS<span class="text-white">TIERS</span></h1>
-            <span class="p-badge text-[9px] bg-yellow-500 text-black">BETA</span>
+    <nav class="max-w-7xl mx-auto flex justify-between items-center mb-12 anim-fade-up">
+        <div class="flex items-center gap-2">
+            <h1 class="text-3xl font-black italic tracking-tighter text-yellow-500">DS<span class="text-white">TIERS</span></h1>
+            <span class="text-[10px] bg-zinc-800 px-2 py-0.5 rounded font-bold text-zinc-500">DATABASE v1.0</span>
         </div>
-        <div class="flex gap-4 items-center">
-            <span class="filter-btn active">DATABASE</span>
-            <span class="filter-btn">TIER LIST</span>
-            <a href="https://discord.gg/2MEP67Rbj2" target="_blank" class="bg-[#5865F2] hover:bg-[#4752C4] text-white text-[11px] font-black px-4 py-1.5 rounded-md transition-all shadow-[0_2px_10px_rgba(88,101,242,0.3)]">DISCORD</a>
+        <div class="flex gap-4">
+            <a href="https://discord.gg/2MEP67Rbj2" target="_blank" class="bg-[#5865F2] hover:scale-105 px-6 py-2 rounded-xl font-black text-xs transition-all shadow-lg shadow-blue-900/20">DISCORD</a>
         </div>
     </nav>
 
-    <main class="container mx-auto p-6 md:p-10 space-y-8 max-w-7xl">
-        
-        <div class="bg-zinc-950 p-6 rounded-2xl border border-zinc-900 shadow-xl space-y-5">
-            <h2 class="text-3xl font-black italic">PRO DATABASE</h2>
-            <p class="text-zinc-500 text-sm tracking-widest uppercase">Max Power rankings from L1 through H5</p>
+    <main class="max-w-7xl mx-auto">
+        <div class="mb-10 space-y-6 anim-slide-left">
+            <h2 class="text-5xl font-black italic tracking-tight uppercase">Ranked Registry</h2>
             
-            <input type="text" id="searchInput" placeholder="Search players by name, tag, or mode..." 
-                class="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-4 py-3.5 text-sm focus:outline-none focus:border-yellow-500 transition-all placeholder:text-zinc-700">
-
-            <div class="flex flex-wrap gap-4 text-xs font-bold items-center text-zinc-600">
-                <span class="uppercase tracking-widest">Platform:</span>
-                <span id="pALL" class="filter-btn active" onclick="setPlatFilter('ALL')">ALL</span>
-                <span id="pMobile" class="filter-btn" onclick="setPlatFilter('Mobile')">Mobile</span>
-                <span id="pPC" class="filter-btn" onclick="setPlatFilter('PC')">PC</span>
-            </div>
-            <div class="flex flex-wrap gap-4 text-xs font-bold items-center text-zinc-600">
-                <span class="uppercase tracking-widest">Mode:</span>
-                <span id="mALL" class="filter-btn active" onclick="setModeFilter('ALL')">ALL</span>
-                <span id="mFFA" class="filter-btn" onclick="setModeFilter('FFA')">FFA</span>
-                <span id="mTDM" class="filter-btn" onclick="setModeFilter('TDM')">TDM</span>
-                <span id="mPoint" class="filter-btn" onclick="setModeFilter('Point')">Point</span>
-                <span id="mConfirm" class="filter-btn" onclick="setModeFilter('Confirm')">Confirm</span>
-                <span id="mTeam KC" class="filter-btn" onclick="setModeFilter('Team KC')">Team KC</span>
-                <span id="mDom" class="filter-btn" onclick="setModeFilter('Dom')">Dom</span>
+            <div class="bg-zinc-900/30 p-4 rounded-2xl border border-zinc-800 flex flex-wrap gap-6 items-center">
+                <div class="flex items-center gap-3">
+                    <span class="text-[10px] font-black text-zinc-500 uppercase">Platform</span>
+                    <div class="flex bg-black p-1 rounded-lg">
+                        <span class="filter-btn active" id="pALL" onclick="setPlat('ALL')">ALL</span>
+                        <span class="filter-btn" id="pPC" onclick="setPlat('PC')">PC</span>
+                        <span class="filter-btn" id="pMobile" onclick="setPlat('Mobile')">MOBILE</span>
+                    </div>
+                </div>
             </div>
         </div>
 
-        <div class="bg-zinc-950 border border-zinc-900 rounded-xl shadow-inner overflow-x-auto">
-            <table class="w-full min-w-[1000px]">
+        <div class="overflow-x-auto">
+            <table class="w-full text-left">
                 <thead>
-                    <tr>
-                        <th class="w-16">#</th>
-                        <th>Player</th>
-                        <th>Platform</th>
-                        <th>Mode</th>
-                        <th>Overall</th>
-                        <th class="text-center">AR</th>
-                        <th class="text-center">SMG</th>
-                        <th class="text-center">Sniper</th>
-                        <th class="text-center">Shotgun</th>
+                    <tr class="text-zinc-600 text-[10px] font-black uppercase tracking-widest">
+                        <th class="p-4">#</th>
+                        <th class="p-4">Player Profile</th>
+                        <th class="p-4">Main / Alt</th>
+                        <th class="p-4">Current OVR</th>
+                        <th class="p-4 text-center">AR</th>
+                        <th class="p-4 text-center">SMG</th>
+                        <th class="p-4 text-center">SNIPER</th>
+                        <th class="p-4 text-center">SHOTGUN</th>
+                        <th class="p-4">Combat Notes</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody">
                     </tbody>
             </table>
-            <div class="p-4 text-center text-xs text-zinc-600 border-t border-zinc-900" id="rowCount">Showing 0 of 0 players</div>
         </div>
     </main>
 
     <script>
-        // Data Structure matching your types.ts
         const players = [
-            { id: 1, name: 'Royies', tag: '[SIC]', plat: 'PC', altPlat: 'Mobile', mode: 'TDM', ovr: 'H4', weapons: { ar: 'H2', smg: 'L2', snp: 'H4', shg: 'L1' } },
-            { id: 2, name: 'Hrisa', tag: '', plat: 'PC', altPlat: null, mode: 'TDM', ovr: 'L2', weapons: { ar: 'L2', smg: null, snp: null, shg: null } },
-            // Add more players here!
+            { 
+                name: 'Royies', 
+                tag: '[SIC]', 
+                plat: 'PC', 
+                alt: 'Mobile', 
+                ovr: 'H4', 
+                weapons: { ar: 'H2', smg: 'L2', snp: 'H4', shg: 'L1' },
+                notes: 'Best: TDM/KC. Worst: FFA. Good: Dom/Point. Weak: Confirm.' 
+            },
+            { 
+                name: 'Hrisa', 
+                tag: '', 
+                plat: 'PC', 
+                alt: null, 
+                ovr: 'L2', 
+                weapons: { ar: 'L2', smg: null, snp: null, shg: null },
+                notes: 'Standard AR player. Prefers TDM.' 
+            }
         ];
 
-        // Tier Color Configuration (Matching your image_0.png complexity)
         const tierColors = {
-            'L1': 'bg-blue-900 text-white', 'H1': 'bg-blue-500 text-white',
-            'L2': 'bg-purple-800 text-white', 'H2': 'bg-purple-600 text-white',
-            'L3': 'bg-red-800 text-white', 'H3': 'bg-red-600 text-white',
-            'L4': 'bg-orange-800 text-white', 'H4': 'bg-orange-500 text-black',
-            'L5': 'bg-yellow-800 text-white', 'H5': 'bg-yellow-500 text-black'
+            'L1': 'bg-L1 L1-glow', 'H1': 'bg-H1', 'H2': 'bg-H2', 'L2': 'bg-L2',
+            'H4': 'bg-H4', 'L5': 'bg-L5', 'H5': 'bg-H5'
         };
 
-        let activePlat = 'ALL';
-        let activeMode = 'ALL';
-        let searchTerm = '';
+        let currentPlat = 'ALL';
 
-        function setPlatFilter(plat) { activePlat = plat; updateFilterUI('platform', plat); filterData(); }
-        function setModeFilter(mode) { activeMode = mode; updateFilterUI('mode', mode); filterData(); }
-        document.getElementById('searchInput').addEventListener('input', (e) => { searchTerm = e.target.value.toLowerCase(); filterData(); });
-
-        function updateFilterUI(type, activeValue) {
-            const prefix = type === 'platform' ? 'p' : 'm';
-            document.querySelectorAll(`.${type}-filter .filter-btn`).forEach(b => b.classList.remove('active'));
-            document.getElementById(`${prefix}${activeValue}`).classList.add('active');
+        function setPlat(p) {
+            currentPlat = p;
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('p' + p).classList.add('active');
+            render();
         }
 
-        function filterData() {
-            const filtered = players.filter(p => {
-                const searchMatch = p.name.toLowerCase().includes(searchTerm) || p.tag.toLowerCase().includes(searchTerm) || p.mode.toLowerCase().includes(searchTerm);
-                const platMatch = activePlat === 'ALL' || p.plat === activePlat || p.altPlat === activePlat;
-                const modeMatch = activeMode === 'ALL' || p.mode === activeMode;
-                return searchMatch && platMatch && modeMatch;
-            });
-            renderTable(filtered);
-        }
-
-        // Advanced rendering of complex rows
-        function renderTable(data) {
-            const tbody = document.getElementById('tableBody');
-            tbody.innerHTML = data.map((p, idx) => `
+        function render() {
+            const body = document.getElementById('tableBody');
+            const filtered = players.filter(p => currentPlat === 'ALL' || p.plat === currentPlat || p.alt === currentPlat);
+            
+            body.innerHTML = filtered.map((p, i) => `
                 <tr class="pro-row">
-                    <td class="text-zinc-700 text-xs font-black">${idx + 1}</td>
-                    <td>
-                        <div class="font-bold text-sm">${p.name} <span class="text-zinc-600 font-normal ml-1">${p.tag}</span></div>
+                    <td class="p-4 text-zinc-700 font-black text-xs">${i + 1}</td>
+                    <td class="p-4">
+                        <div class="font-black text-sm">${p.name} <span class="text-zinc-600 font-normal ml-1">${p.tag}</span></div>
                     </td>
-                    <td>
-                        <div class="flex flex-col gap-1 items-start">
-                            <span class="p-badge">${p.plat}</span>
-                            ${p.altPlat ? `<span class="p-badge text-zinc-600">${p.altPlat}</span>` : ''}
-                        </div>
+                    <td class="p-4">
+                        <span class="text-[9px] bg-zinc-900 px-2 py-1 rounded text-zinc-400 font-bold border border-zinc-800">${p.plat}${p.alt ? '/' + p.alt : ''}</span>
                     </td>
-                    <td><span class="m-badge">${p.mode}</span></td>
-                    <td><span class="t-badge ${tierColors[p.ovr]}">${p.ovr}</span></td>
+                    <td class="p-4">
+                        <span class="t-badge ${tierColors[p.ovr]}">${p.ovr}</span>
+                    </td>
                     ${['ar', 'smg', 'snp', 'shg'].map(w => {
-                        const val = p.weapons[w];
-                        return `<td class="text-center">${val ? `<span class="t-badge text-[9px] ${tierColors[val]}">${val}</span>` : '<span class="text-zinc-800">—</span>'}</td>`;
+                        const v = p.weapons[w];
+                        return `<td class="p-4 text-center">${v ? `<span class="t-badge ${tierColors[v]}">${v}</span>` : '<span class="text-zinc-800">—</span>'}</td>`;
                     }).join('')}
+                    <td class="p-4">
+                        <p class="text-[10px] text-zinc-500 italic max-w-[200px] leading-tight">${p.notes}</p>
+                    </td>
                 </tr>
             `).join('');
-            document.getElementById('rowCount').innerText = `Showing ${data.length} of ${players.length} players`;
         }
 
-        // Initial Load
-        renderTable(players);
+        render();
     </script>
 </body>
 </html>
